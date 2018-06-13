@@ -16,7 +16,7 @@ import feign.Request;
 @EnableDiscoveryClient
 @ImportResource({ "classpath*:applicationContext.xml" })
 @EnableFeignClients(basePackages = "com.enhinck.demo.service")
-@SpringBootApplication(scanBasePackages = "com.enhinck.demo.service,com.enhinck.demo.api")
+@SpringBootApplication
 public class DemoApiApplication {
 
 	public static void main(String[] args) {
