@@ -1,0 +1,30 @@
+keytool -genkey -alias cas -keyalg RSA -keysize 2048 -keypass 123456 -storepass 123456 -keystore D:/liuyx.keystore -dname "CN=cas.example.org,OU=liuyx.com,O=liuyx,L=JiNan,ST=JiNan,C=CN"
+
+
+第一步：为服务器生成证书
+
+keytool -genkey -alias springboothttps -keypass 123456 -keyalg RSA -keysize 1024 -validity 365 -keystore D:/springboothttps/springboothttps.keystore  -storepass 123456 -dname  "CN=www.enhinck.com, OU=com, O=com.enhinck, L=HZ, ST=ZJ, C=CN"
+
+第二步：为客户端生成证书
+
+keytool -genkey -alias client1 -keypass 123456 -keyalg RSA -keysize 1024 -validity 365 -storetype PKCS12 -keystore D:/springboothttps/client1.p12 -storepass 123456  -dname  "CN=www.enhinck.com, OU=com, O=com.enhinck, L=HZ, ST=ZJ, C=CN"
+
+第三步：让服务器信任客户端证书
+keytool -export -alias client1 -keystore D:/springboothttps/client1.p12 -storetype PKCS12 -keypass 123456 -file D:/springboothttps/client.cer
+
+将该文件导入到服务器的证书库，添加为一个信任证书
+keytool -import -v -file D:/springboothttps/client.cer -keystore D:/springboothttps/springboothttps.keystore -storepass 123456
+
+完成之后通过list命令查看服务器的证书库
+keytool -list -v -keystore D:/springboothttps/springboothttps.keystore
+
+第四步：让客户端信任服务器证书
+keytool -keystore D:/springboothttps/springboothttps.keystore -export -alias springboothttps -file D:/springboothttps/server.cer
+
+双击server.cer文件，按照提示安装证书，
+
+将证书填入到“受信任的根证书颁发机构”。
+
+填入方法：
+
+打开浏览器   - 工具  -  internet选项-内容- 证书-把中级证书颁发机构里的www.localhost.com(该名称即时你前面生成证书时填写的名字与姓氏)证书导出来-再把导出来的证书导入  受信任的根颁发机构  就OK了。
