@@ -1,30 +1,30 @@
 keytool -genkey -alias cas -keyalg RSA -keysize 2048 -keypass 123456 -storepass 123456 -keystore D:/liuyx.keystore -dname "CN=cas.example.org,OU=liuyx.com,O=liuyx,L=JiNan,ST=JiNan,C=CN"
 
 
-µÚÒ»²½£ºÎª·şÎñÆ÷Éú³ÉÖ¤Êé
+ç¬¬ä¸€æ­¥ï¼šä¸ºæœåŠ¡å™¨ç”Ÿæˆè¯ä¹¦
 
 keytool -genkey -alias springboothttps -keypass 123456 -keyalg RSA -keysize 1024 -validity 365 -keystore D:/springboothttps/springboothttps.keystore  -storepass 123456 -dname  "CN=www.enhinck.com, OU=com, O=com.enhinck, L=HZ, ST=ZJ, C=CN"
 
-µÚ¶ş²½£ºÎª¿Í»§¶ËÉú³ÉÖ¤Êé
+ç¬¬äºŒæ­¥ï¼šä¸ºå®¢æˆ·ç«¯ç”Ÿæˆè¯ä¹¦
 
 keytool -genkey -alias client1 -keypass 123456 -keyalg RSA -keysize 1024 -validity 365 -storetype PKCS12 -keystore D:/springboothttps/client1.p12 -storepass 123456  -dname  "CN=www.enhinck.com, OU=com, O=com.enhinck, L=HZ, ST=ZJ, C=CN"
 
-µÚÈı²½£ºÈÃ·şÎñÆ÷ĞÅÈÎ¿Í»§¶ËÖ¤Êé
+ç¬¬ä¸‰æ­¥ï¼šè®©æœåŠ¡å™¨ä¿¡ä»»å®¢æˆ·ç«¯è¯ä¹¦
 keytool -export -alias client1 -keystore D:/springboothttps/client1.p12 -storetype PKCS12 -keypass 123456 -file D:/springboothttps/client.cer
 
-½«¸ÃÎÄ¼şµ¼Èëµ½·şÎñÆ÷µÄÖ¤Êé¿â£¬Ìí¼ÓÎªÒ»¸öĞÅÈÎÖ¤Êé
+å°†è¯¥æ–‡ä»¶å¯¼å…¥åˆ°æœåŠ¡å™¨çš„è¯ä¹¦åº“ï¼Œæ·»åŠ ä¸ºä¸€ä¸ªä¿¡ä»»è¯ä¹¦
 keytool -import -v -file D:/springboothttps/client.cer -keystore D:/springboothttps/springboothttps.keystore -storepass 123456
 
-Íê³ÉÖ®ºóÍ¨¹ılistÃüÁî²é¿´·şÎñÆ÷µÄÖ¤Êé¿â
+å®Œæˆä¹‹åé€šè¿‡listå‘½ä»¤æŸ¥çœ‹æœåŠ¡å™¨çš„è¯ä¹¦åº“
 keytool -list -v -keystore D:/springboothttps/springboothttps.keystore
 
-µÚËÄ²½£ºÈÃ¿Í»§¶ËĞÅÈÎ·şÎñÆ÷Ö¤Êé
+ç¬¬å››æ­¥ï¼šè®©å®¢æˆ·ç«¯ä¿¡ä»»æœåŠ¡å™¨è¯ä¹¦
 keytool -keystore D:/springboothttps/springboothttps.keystore -export -alias springboothttps -file D:/springboothttps/server.cer
 
-Ë«»÷server.cerÎÄ¼ş£¬°´ÕÕÌáÊ¾°²×°Ö¤Êé£¬
+åŒå‡»server.ceræ–‡ä»¶ï¼ŒæŒ‰ç…§æç¤ºå®‰è£…è¯ä¹¦ï¼Œ
 
-½«Ö¤ÊéÌîÈëµ½¡°ÊÜĞÅÈÎµÄ¸ùÖ¤Êé°ä·¢»ú¹¹¡±¡£
+å°†è¯ä¹¦å¡«å…¥åˆ°â€œå—ä¿¡ä»»çš„æ ¹è¯ä¹¦é¢å‘æœºæ„â€ã€‚
 
-ÌîÈë·½·¨£º
+å¡«å…¥æ–¹æ³•ï¼š
 
-´ò¿ªä¯ÀÀÆ÷   - ¹¤¾ß  -  internetÑ¡Ïî-ÄÚÈİ- Ö¤Êé-°ÑÖĞ¼¶Ö¤Êé°ä·¢»ú¹¹ÀïµÄwww.localhost.com(¸ÃÃû³Æ¼´Ê±ÄãÇ°ÃæÉú³ÉÖ¤ÊéÊ±ÌîĞ´µÄÃû×ÖÓëĞÕÊÏ)Ö¤Êéµ¼³öÀ´-ÔÙ°Ñµ¼³öÀ´µÄÖ¤Êéµ¼Èë  ÊÜĞÅÈÎµÄ¸ù°ä·¢»ú¹¹  ¾ÍOKÁË¡£
+æ‰“å¼€æµè§ˆå™¨   - å·¥å…·  -  interneté€‰é¡¹-å†…å®¹- è¯ä¹¦-æŠŠä¸­çº§è¯ä¹¦é¢å‘æœºæ„é‡Œçš„www.localhost.com(è¯¥åç§°å³æ—¶ä½ å‰é¢ç”Ÿæˆè¯ä¹¦æ—¶å¡«å†™çš„åå­—ä¸å§“æ°)è¯ä¹¦å¯¼å‡ºæ¥-å†æŠŠå¯¼å‡ºæ¥çš„è¯ä¹¦å¯¼å…¥  å—ä¿¡ä»»çš„æ ¹é¢å‘æœºæ„  å°±OKäº†ã€‚

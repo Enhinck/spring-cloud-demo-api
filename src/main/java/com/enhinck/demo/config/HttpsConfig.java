@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * @author huenbin
  * @date 2018/6/13
  */
-@Component
+//@Component
 public class HttpsConfig {
 
 	@Bean

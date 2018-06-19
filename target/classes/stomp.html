@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>SocketJs演示WebSocket</title>
+</head>
+<body onload="disconnect()">
+<div>
+    <div>
+        <button id="connect" onclick="connect();">连接</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">断开连接</button>
+    </div>
+
+    <div id="conversationDIV">
+        <label>输入你的名字</label>
+        <input type="text" id="name"/>
+        <button id="sendName" onclick="sendName();">发送</button>
+        <p id="response"></p>
+    </div>
+
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
+<script type="text/javascript">
+    var stompClient = null;
+
+    function setConnected(connected){
+        document.getElementById('connect').disabled = connected;
+        document.getElementById('disconnect').disabled = !connected;
+        document.getElementById('conversationDIV').style.visibility = connected ? 'visible':'hidden';
+        $('#response').html();
+    }
+
+    function connect(){
+        //链接Socket的endpoint名称为endpointWisely
+        var socket = new SockJS('http://localhost:8081/webServer');
+        //使用STOMP子协议的WebSocket客户端
+       stompClient = Stomp.over(socket);
+        
+        //var stompClient = Stomp.overWS('ws://localhost:8081/webServer');
+        var headers = {
+		// additional header
+			'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTUyOTk5OTM0MSwiaWF0IjoxNTI5Mzk0NTQxfQ.TH6A2Hidt7Z4u_FEcg3dTs0cJhlMes05x6jZSCr3Vhcic9oXEBl4WsyDLCfELnXaiIrGRdwFrzwuiDeO07WFxA'
+		};
+        //链接WebSocket服务端
+        stompClient.connect(headers,function (frame) {
+            setConnected(true);
+            console.log('Connected:' + frame);
+            //通过stompClient.subscribe订阅/topic/hello目标发送的消息，即控制器中的@SendTo
+           
+             stompClient.subscribe('/topic/hello', function(message){  
+        	        var json = JSON.parse(message.body);  
+        	        console.log(json);
+        	    });  
+        	   console.log('subscribe: SUCCESS');
+        	     stompClient.subscribe('/user/' + 1 + '/message', function(message){  
+        	         var messageEntity = JSON.parse(message.body);  
+        	         console.log(messageEntity);
+        	    });  
+            
+        });
+    }
+
+    function disconnect(){
+        if(stompClient != null){
+            stompClient.disconnect();
+        }
+        setConnected(false);
+        console.log("Disconnecteed");
+    }
+
+    function sendName(){
+        var name = $('#name').val();
+        stompClient.send("/welcome",{},name);
+    }
+
+    function showResponse(message){
+        $('#response').append($('#response').val() + message + '<br/>');
+    }
+
+</script>
+</body>
+</html>

@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
  * @author hueb
  * @date 2018/6/13
  */
-@ServerEndpoint("/websocket")
-@Component
+//@ServerEndpoint("/websocket")
+//@Component
 public class MyWebSocket {
 
     private static Logger logger = Logger.getLogger(MyWebSocket.class.getName());

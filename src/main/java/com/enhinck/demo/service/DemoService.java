@@ -14,4 +14,6 @@ public interface DemoService {
 	@PostMapping("/rest/demo/do")
 	CallRemoteResult<String> doDemo(@RequestParam("name") String name);
 
+	
+	
 }

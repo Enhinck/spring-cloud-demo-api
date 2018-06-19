@@ -30,7 +30,7 @@ public class SwaggerConfig {
 	public Docket postsApi() {
 		return new Docket(DocumentationType.SWAGGER_2).groupName("enhinck-demo-api").apiInfo(apiInfo()).select()
 				.apis(RequestHandlerSelectors.basePackage("com.enhinck.demo.api")).paths(postPaths()).build()
-				.globalOperationParameters(parameters());
+				;//.globalOperationParameters(parameters());
 	}
 
 	private Predicate<String> postPaths() {
