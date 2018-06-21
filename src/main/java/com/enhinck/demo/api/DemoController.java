@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ public class DemoController extends BaseController {
 	 */
 	@ApiOperation("测试")
 	@PostMapping(value = "/test")
+	@PreAuthorize("hasPermission('user','admin')")
 	public String login(String name) {
 
 		return demoService.doDemo(name).getReturnObject();
@@ -45,10 +47,11 @@ public class DemoController extends BaseController {
     @Autowired
     WebSocketController webSocketController;
     @ApiOperation("测试WebSocket")
+    @PreAuthorize("hasPermission('user','ROLE_ADMIN')")
     @RequestMapping(value = "test1", method = RequestMethod.POST)
     public void test(@RequestBody Greeting greeting) {
     	UserMessage userMessage = new UserMessage();
-    	BeanUtils.copyProperties(userMessage, greeting);
+    	BeanUtils.copyProperties(greeting,userMessage);
     	webSocketController.template.convertAndSend("/topic/hello",greeting); //广播  
     	webSocketController.template.convertAndSendToUser("1", "/message",userMessage); //一对一发送，发送特定的客户端 
     }

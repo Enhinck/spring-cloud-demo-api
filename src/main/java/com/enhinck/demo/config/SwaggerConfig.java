@@ -6,9 +6,17 @@ import static springfox.documentation.builders.PathSelectors.regex;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.enhinck.demo.jwt.JwtTokenUtil;
+import com.enhinck.demo.jwt.JwtUser;
+import com.enhinck.demo.jwt.JwtUserFactory;
+import com.enhinck.demo.model.Authority;
+import com.enhinck.demo.model.AuthorityName;
+import com.enhinck.demo.model.User;
 import com.google.common.base.Predicate;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -26,15 +34,17 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
+	@Autowired
+	JwtTokenUtil jwtTokenUtil;
 	@Bean
 	public Docket postsApi() {
 		return new Docket(DocumentationType.SWAGGER_2).groupName("enhinck-demo-api").apiInfo(apiInfo()).select()
 				.apis(RequestHandlerSelectors.basePackage("com.enhinck.demo.api")).paths(postPaths()).build()
-				;//.globalOperationParameters(parameters());
+				.globalOperationParameters(parameters());
 	}
 
 	private Predicate<String> postPaths() {
-		return or(regex("/api/posts.*"), regex("/api/*.*"));
+		return or(regex("/api/posts.*"), regex("/*.*"));
 	}
 
 	private ApiInfo apiInfo() {
@@ -46,13 +56,26 @@ public class SwaggerConfig {
 
 	private List<Parameter> parameters() {
 		List<Parameter> pars = new ArrayList<Parameter>();
+		User user = new User();
+		user.setUsername("admin");
+		user.setId(1L);
+		user.setPassword("admin");
+		user.setEnabled(true);
+		List<Authority> authorities = new ArrayList<>();
+		Authority authoritie = new Authority();
+		authoritie.setName(AuthorityName.ROLE_ADMIN);
+		authoritie.setId(1L);
+		authorities.add(authoritie);
+		user.setAuthorities(authorities);
+		JwtUser jwtUser =JwtUserFactory.create(user);
+		String token = jwtTokenUtil.debugToken(jwtUser);
+		
+		String authorization = "Bearer " + token;
+		ParameterBuilder debugUserAthorization = new ParameterBuilder();
+		debugUserAthorization.name(HttpHeaders.AUTHORIZATION).description("用户请求头").modelRef(new ModelRef("string"))
+				.parameterType("header").defaultValue(authorization).required(true).build();
 
-		ParameterBuilder debugUserIdPar = new ParameterBuilder();
-		debugUserIdPar.name("debugUserId").description("方便本地debug用").modelRef(new ModelRef("string"))
-				.parameterType("query").defaultValue("1").required(false).build();
-
-		pars.add(debugUserIdPar.build());
-
+		pars.add(debugUserAthorization.build());
 		return pars;
 	}
 

@@ -23,6 +23,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -90,6 +91,10 @@ public class ResponseHandler implements ResponseBodyAdvice<Object> {
 		            ExceptionConstants.SYSTEM_BIND_EXCEPTION);
 		        exceptionMappings.put(NoHandlerFoundException.class.getName(),
 		            ExceptionConstants.SYSTEM_NULL_POINTER_EXCEPTION);
+		        exceptionMappings.put(AccessDeniedException.class.getName(),
+			            ExceptionConstants.USER_NOT_PERMISSION);
+		        
+		        
 		// Springmvc的一些异常
 	}
 
@@ -109,7 +114,9 @@ public class ResponseHandler implements ResponseBodyAdvice<Object> {
 		} else if (ex instanceof IllegalStateException && StringUtils.endsWith(ex.getMessage(),
 				"Consider declaring it as object wrapper for the corresponding primitive type.")) {
 			resultEnum = ExceptionConstants.SYSTEM_MISSING_REQUEST_PARAMETERS;
-		} else {
+		} else if(ex instanceof AccessDeniedException) {
+			resultEnum = ExceptionConstants.USER_NOT_PERMISSION;
+		}else {
 			resultEnum = ExceptionConstants.SYSTEM_OTHER_EXCEPTION;
 		}
 

@@ -1,6 +1,7 @@
 package com.enhinck.demo.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -16,8 +17,11 @@ public class UserService {
 		User user = new User();
 		user.setUsername("admin");
 		user.setId(1L);
-		user.setPassword("$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi");
+		user.setPassword("admin");
 		user.setEnabled(true);
+		//Date date = new Date(System.currentTimeMillis()+3600000);
+		//user.setLastPasswordResetDate(date);
+		
 		List<Authority> authorities = new ArrayList<>();
 
 		Authority authoritie = new Authority();

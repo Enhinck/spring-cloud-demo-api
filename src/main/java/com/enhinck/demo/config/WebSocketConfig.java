@@ -74,6 +74,7 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
 								.getSessionAttributes(message.getHeaders());
 						sessionAttributes.put(CsrfToken.class.getName(),
 								new DefaultCsrfToken("Authorization", "Authorization", jwtToken));
+						jwtToken = jwtToken.substring(7);
 						String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 						UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 						// For simple validation it is completely sufficient to just check the token
@@ -82,8 +83,6 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
 						if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 							UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 									userDetails, null, userDetails.getAuthorities());
-							// authentication.setDetails(new
-							// WebAuthenticationDetailsSource().buildDetails(request));
 							log.info("authorizated user '{}', setting security context", username);
 							SecurityContextHolder.getContext().setAuthentication(authentication);
 							accessor.setUser(authentication);

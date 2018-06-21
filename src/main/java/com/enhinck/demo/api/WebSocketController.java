@@ -7,8 +7,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import lombok.extern.slf4j.Slf4j;
 @Controller 
 @CrossOrigin
+@Slf4j
 public class WebSocketController {
 	public SimpMessagingTemplate template;
 
@@ -24,8 +27,16 @@ public class WebSocketController {
 	}
 
 	@MessageMapping("/message")
-	@SendToUser("/message")
+	@SendToUser(value="/message",broadcast=true)
 	public UserMessage userMessage(UserMessage userMessage) throws Exception {
 		return userMessage;
 	}
+	
+	@MessageMapping("/welcome")
+	public String welcome(String userMessage) throws Exception {
+		log.info(userMessage);
+		return userMessage;
+	}
+	
+	
 }
