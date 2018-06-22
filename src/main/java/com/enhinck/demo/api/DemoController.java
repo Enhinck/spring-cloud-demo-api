@@ -1,5 +1,7 @@
 package com.enhinck.demo.api;
 
+import java.util.UUID;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enhinck.demo.model.Demo;
+import com.enhinck.demo.rabbmit.RabbitMQSender;
 import com.enhinck.demo.service.DemoService;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +34,20 @@ public class DemoController extends BaseController {
 	@Resource
 	DemoService demoService;
 
+	
+	@Resource
+	RabbitMQSender rabbitMQSender;
+	
+	@ApiOperation("测试")
+	@PostMapping("/testRabbitMQ")
+	public void test() {
+		Demo message = new Demo();
+		//greeting.setName("测试消息1" + Math.random()+"");
+		//greeting.setValue(Math.random()+"");
+		message.setTitle(UUID.randomUUID().toString().replaceAll("-", ""));
+		message.setMessage("111111111111");
+		rabbitMQSender.send(message);
+	}
 	/**
 	 * 测试
 	 *
